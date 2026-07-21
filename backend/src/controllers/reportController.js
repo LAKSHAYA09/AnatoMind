@@ -1,0 +1,85 @@
+const Report = require("../models/Report");
+
+// @desc    Upload a new medical report
+// @route   POST /api/reports/upload
+// @access  Private
+const uploadReport = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: "Please upload a file" });
+    }
+
+    // Create a new report entry in the database linked to the authenticated user
+    const report = await Report.create({
+      user: req.user._id, // Set automatically by authMiddleware
+      fileName: req.file.filename,
+      filePath: req.file.path,
+      reportType: "Unknown", // Will be processed by OCR/AI pipeline later
+      status: "Uploaded",
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Report uploaded successfully",
+      data: report,
+    });
+  } catch (error) {
+    console.error("Upload error:", error.message);
+    res.status(500).json({ success: false, message: "Server error during file upload" });
+  }
+};
+
+// @desc    Get all reports for the logged-in user
+// @route   GET /api/reports
+// @access  Private
+const getReports = async (req, res) => {
+  try {
+    // Find only the reports that belong to the current authenticated user
+    const reports = await Report.find({ user: req.user._id }).sort({ createdAt: -1 });
+    
+    res.status(200).json({
+      success: true,
+      count: reports.length,
+      data: reports,
+    });
+  } catch (error) {
+    console.error("Get reports error:", error.message);
+    res.status(500).json({ success: false, message: "Server error fetching reports" });
+  }
+};
+
+// @desc    Get a single report by ID
+// @route   GET /api/reports/:id
+// @access  Private
+const getReportById = async (req, res) => {
+  try {
+    const report = await Report.findById(req.params.id);
+
+    if (!report) {
+      return res.status(404).json({ success: false, message: "Report not found" });
+    }
+
+    // Security Check: Make sure the report belongs to the logged-in user
+    if (report.user.toString() !== req.user._id.toString()) {
+      return res.status(401).json({ success: false, message: "Not authorized to view this report" });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: report,
+    });
+  } catch (error) {
+    console.error("Get single report error:", error.message);
+    // Handle invalid Mongoose Object ID casting errors cleanly
+    if (error.kind === "ObjectId") {
+      return res.status(404).json({ success: false, message: "Report not found" });
+    }
+    res.status(500).json({ success: false, message: "Server error fetching the report" });
+  }
+};
+
+module.exports = {
+  uploadReport,
+  getReports,
+  getReportById,
+};
