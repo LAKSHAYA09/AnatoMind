@@ -1,32 +1,78 @@
 const Report = require("../models/Report");
+const { extractText } = require("../services/ocrService");
+const parseOCR=require("../utils/parseOCR");
 
 // @desc    Upload a new medical report
 // @route   POST /api/reports/upload
 // @access  Private
 const uploadReport = async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ success: false, message: "Please upload a file" });
+
+    try{
+
+        if(!req.file){
+
+            return res.status(400).json({
+                success:false,
+                message:"Please upload a file"
+            });
+
+        }
+
+        // Call Python OCR Service
+        const ocrResult = await extractText(req.file.path);
+        const parsedData=parseOCR(
+          ocrResult.text
+        );
+
+        // Save report
+        const report = await Report.create({
+
+            user:req.user._id,
+
+            fileName:req.file.filename,
+
+            filePath:`/uploads/${req.file.filename}`,
+
+            reportType:"Unknown",
+            
+            extractedText:ocrResult.text,
+            
+            extractedData:parsedData,
+            
+            status:"Completed"
+
+        });
+
+        res.status(201).json({
+
+            success:true,
+
+            message:"OCR completed successfully",
+
+            extractedText:ocrResult.text,
+
+            extractedData:parsedData,
+
+            report
+
+        });
+
     }
 
-    // Create a new report entry in the database linked to the authenticated user
-    const report = await Report.create({
-      user: req.user._id, // Set automatically by authMiddleware
-      fileName: req.file.filename,
-      filePath: req.file.path,
-      reportType: "Unknown", // Will be processed by OCR/AI pipeline later
-      status: "Uploaded",
-    });
+    catch(error){
 
-    res.status(201).json({
-      success: true,
-      message: "Report uploaded successfully",
-      data: report,
-    });
-  } catch (error) {
-    console.error("Upload error:", error.message);
-    res.status(500).json({ success: false, message: "Server error during file upload" });
-  }
+        console.error(error);
+
+        res.status(500).json({
+
+            success:false,
+
+            message:"OCR Processing Failed"
+
+        });
+
+    }
+
 };
 
 // @desc    Get all reports for the logged-in user
