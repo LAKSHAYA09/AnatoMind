@@ -42,7 +42,17 @@ const reportSchema = new mongoose.Schema({
             "Failed"
         ],
         default:"Uploaded"
-    }
+    },
+
+    analysis: [
+        {
+            parameter: String,
+            organ: String,
+            severity: String,
+            confidence: Number,
+            condition: String
+        }
+    ]
 
 },{
     timestamps:true

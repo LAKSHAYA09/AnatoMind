@@ -3,6 +3,7 @@ import shutil
 import os
 
 from services.ocr_service import extract_text
+from services.analysis_service import analyze_report
 
 app = FastAPI(
     title="AnatoMind OCR Service",
@@ -42,3 +43,13 @@ async def ocr(file: UploadFile = File(...)):
     finally:
         if os.path.exists(file_path):
             os.remove(file_path)
+            
+@app.post("/analyze")
+
+async def analyze(data: dict):
+    findings = analyze_report(data)
+
+    return {
+        "success": True,
+        "findings": findings
+    }
