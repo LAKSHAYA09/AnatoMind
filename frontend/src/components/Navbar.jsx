@@ -1,7 +1,12 @@
+import { useNavigate } from "react-router-dom";
+
 function Navbar() {
+  const navigate = useNavigate();
+
   return (
     <nav className="absolute left-0 top-0 z-50 w-full px-8 py-6 lg:px-12">
       <div className="mx-auto flex max-w-[1500px] items-center justify-between">
+
         {/* Logo */}
         <div className="flex items-center gap-3">
           <svg
@@ -80,13 +85,23 @@ function Navbar() {
 
         {/* Actions */}
         <div className="flex items-center gap-5">
-          <button className="text-xs text-white/60 transition hover:text-white">
+
+          {/* Login */}
+          <button
+            onClick={() => navigate("/login")}
+            className="text-xs text-white/60 transition hover:text-white"
+          >
             Login
           </button>
 
-          <button className="rounded-full border border-red-500/50 bg-red-600/10 px-5 py-2.5 text-[9px] tracking-[0.2em] text-red-400 transition hover:bg-red-600 hover:text-white">
+          {/* Get Started */}
+          <button
+            onClick={() => navigate("/login")}
+            className="rounded-full border border-red-500/50 bg-red-600/10 px-5 py-2.5 text-[9px] tracking-[0.2em] text-red-400 transition hover:bg-red-600 hover:text-white"
+          >
             Get Started
           </button>
+
         </div>
       </div>
     </nav>
