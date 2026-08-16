@@ -1,287 +1,466 @@
-import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import HeartModel from "./HeartModel";
 
-function VitalTicker() {
-  const [cells, setCells] = useState(12552);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCells((value) => value + Math.floor(Math.random() * 15) + 5);
-    }, 1500);
-
-    return () => clearInterval(interval);
-  }, []);
+export default function Hero() {
+  const navigate = useNavigate();
 
   return (
-    <aside className="absolute right-10 top-[18%] z-50 hidden h-[56%] w-[210px] rounded-2xl border border-red-500/20 bg-black/60 p-5 font-mono backdrop-blur-xl xl:flex xl:flex-col">
-      <div className="flex items-center gap-2">
-        <span className="h-2 w-2 animate-pulse rounded-full bg-red-500 shadow-[0_0_12px_3px_rgba(239,68,68,0.5)]" />
+    <div className="relative h-screen w-full overflow-hidden bg-black text-white">
 
-        <span className="text-[8px] uppercase tracking-[0.3em] text-red-400">
-          Live Vitals
-        </span>
-      </div>
+      {/* =====================================================
+          BACKGROUND
+      ====================================================== */}
 
-      <div className="mt-8">
-        <p className="text-[7px] uppercase tracking-[0.25em] text-white/35">
-          Cardiac Rhythm
-        </p>
-
-        <svg viewBox="0 0 180 50" className="mt-3 h-14 w-full">
-          <path
-            d="M0 25 H35 L43 25 L50 8 L58 42 L66 25 H95 L103 25 L110 12 L118 38 L126 25 H180"
-            fill="none"
-            stroke="#ef4444"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeDasharray="280"
-            className="animate-vital-ekg"
-          />
-        </svg>
-      </div>
-
-      <div className="mt-7 border-t border-white/10 pt-5">
-        <p className="text-[7px] uppercase tracking-[0.25em] text-white/35">
-          Cells Analyzed
-        </p>
-
-        <p className="mt-2 text-2xl font-medium tracking-wider text-white">
-          {cells.toLocaleString()}
-        </p>
-
-        <p className="mt-1 text-[7px] uppercase tracking-[0.2em] text-red-500/70">
-          Live Processing
-        </p>
-      </div>
-
-      <div className="mt-auto border-t border-white/10 pt-5">
-        <div className="flex items-center justify-between">
-          <span className="text-[8px] uppercase tracking-[0.25em] text-white/35">
-            O2 Sat
-          </span>
-
-          <span className="text-sm font-medium tracking-wider text-red-400">
-            98%
-          </span>
-        </div>
-
-        <div className="mt-5 flex items-center justify-between">
-          <span className="text-[8px] uppercase tracking-[0.25em] text-white/35">
-            Heart Rate
-          </span>
-
-          <span className="text-sm font-medium tracking-wider text-red-400">
-            72 BPM
-          </span>
-        </div>
-      </div>
-    </aside>
-  );
-}
-
-function BackgroundEcg() {
-  return (
-    <div className="pointer-events-none absolute left-0 top-[57%] z-10 w-full opacity-30">
-      <svg
-        viewBox="0 0 1920 180"
-        className="h-44 w-full"
-        preserveAspectRatio="none"
-      >
-        <path
-          d="M0 95 H280 L315 95 L335 55 L355 145 L375 95 H620 L655 95 L675 40 L695 155 L715 95 H1010 L1040 95 L1060 50 L1080 145 L1100 95 H1370 L1400 95 L1420 35 L1440 160 L1460 95 H1920"
-          fill="none"
-          stroke="#ef4444"
-          strokeWidth="3"
-          strokeLinecap="round"
-          strokeDasharray="2200"
-          className="animate-background-ekg"
-        />
-      </svg>
-    </div>
-  );
-}
-
-function Hero({ scrollProgress = 0 }) {
-  return (
-    <section className="relative h-screen min-h-[680px] w-full overflow-hidden bg-[#050303] text-white">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-[61%] top-[43%] h-[850px] w-[850px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(180,0,0,0.4)_0%,rgba(110,0,0,0.22)_35%,rgba(35,0,0,0.08)_60%,transparent_75%)] blur-[50px]" />
 
+        {/* Main red glow */}
+        <div className="absolute left-[50%] top-[35%] h-[450px] w-[450px] -translate-x-1/2 rounded-full bg-red-950/30 blur-[140px]" />
+
+        {/* Secondary red glow */}
+        <div className="absolute right-[-120px] top-[-100px] h-[400px] w-[400px] rounded-full bg-red-900/10 blur-[130px]" />
+
+        {/* Grid */}
         <div
-          className="absolute inset-0 opacity-[0.035]"
+          className="absolute inset-0 opacity-[0.08]"
           style={{
-            backgroundImage: `
-              linear-gradient(rgba(255,255,255,0.45) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,255,255,0.45) 1px, transparent 1px)
-            `,
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px)",
             backgroundSize: "70px 70px",
           }}
         />
 
-        <div
-          className="absolute inset-0 opacity-[0.025]"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,0,0,0.4) 4px)",
-          }}
-        />
       </div>
 
-      <BackgroundEcg />
 
-      <div className="relative mx-auto h-full w-full max-w-[1500px] px-8 lg:px-12">
-        {/* Left content */}
-        <div className="absolute left-8 top-[47%] z-30 w-[42%] max-w-[560px] -translate-y-1/2 lg:left-14">
-          <p className="mb-5 text-[9px] uppercase tracking-[0.5em] text-red-500">
-            Welcome to AnatoMind
-          </p>
+      {/* =====================================================
+          NAVBAR
+      ====================================================== */}
 
-          <h1 className="text-5xl font-semibold leading-[1.02] tracking-[-0.045em] lg:text-[60px]">
+      <header className="relative z-50">
+
+        <nav className="mx-auto flex h-[72px] max-w-[1400px] items-center justify-between px-6 lg:px-10">
+
+          {/* LOGO */}
+
+          <button
+            onClick={() => navigate("/")}
+            className="text-left"
+          >
+
+            <div className="text-xl font-bold tracking-[0.16em]">
+              ANATO<span className="text-red-500">MIND</span>
+            </div>
+
+            <div className="mt-0.5 font-mono text-[6px] tracking-[0.3em] text-red-500/60">
+              LISTENING TO WHAT YOUR BODY SAYS. 24/7.
+            </div>
+
+          </button>
+
+
+          {/* CENTER NAVIGATION */}
+
+          <div className="hidden items-center gap-8 lg:flex">
+
+            <button className="text-sm font-medium text-white/50 transition hover:text-white">
+              Explore
+            </button>
+
+            <button className="text-sm font-medium text-white/50 transition hover:text-white">
+              Systems
+            </button>
+
+            <button className="text-sm font-medium text-white/50 transition hover:text-white">
+              AI Assistant
+            </button>
+
+            <button className="text-sm font-medium text-white/50 transition hover:text-white">
+              Learn
+            </button>
+
+            <button className="text-sm font-medium text-white/50 transition hover:text-white">
+              About
+            </button>
+
+          </div>
+
+
+          {/* RIGHT NAVIGATION */}
+
+          <div className="flex items-center gap-3">
+
+            {/* LOGIN */}
+
+            <button
+              onClick={() => navigate("/login")}
+              className="px-3 py-2 text-sm text-white/70 transition hover:text-white"
+            >
+              Login
+            </button>
+
+
+            {/* GET STARTED */}
+
+            <button
+              onClick={() => navigate("/login")}
+              className="rounded-full border border-red-500/70 px-5 py-2.5 font-mono text-[9px] uppercase tracking-[0.18em] text-red-400 transition duration-300 hover:bg-red-500 hover:text-white"
+            >
+              Get Started
+            </button>
+
+          </div>
+
+        </nav>
+
+      </header>
+
+
+      {/* =====================================================
+          HERO SECTION
+      ====================================================== */}
+
+      <main className="relative z-10 mx-auto grid h-[calc(100vh-72px)] max-w-[1400px] items-center px-6 lg:grid-cols-[1fr_1.15fr_0.5fr] lg:px-10">
+
+
+        {/* =================================================
+            LEFT CONTENT
+        ================================================== */}
+
+        <section className="relative z-30">
+
+          {/* LABEL */}
+
+          <div className="mb-4 flex items-center gap-3">
+
+            <span className="h-1.5 w-1.5 rounded-full bg-red-500 shadow-[0_0_12px_rgba(239,68,68,0.9)]" />
+
+            <span className="font-mono text-[8px] uppercase tracking-[0.35em] text-red-500">
+              Welcome to AnatoMind
+            </span>
+
+          </div>
+
+
+          {/* MAIN HEADING */}
+
+          <h1 className="max-w-[560px] text-5xl font-semibold leading-[0.95] tracking-[-0.055em] sm:text-6xl lg:text-[62px] xl:text-[68px]">
+
             Explore the
+
             <br />
+
             Human Body
+
             <br />
-            <span className="text-red-500">Like Never Before.</span>
+
+            <span className="text-red-500">
+              Like Never Before.
+            </span>
+
           </h1>
 
-          <div className="mt-9 flex items-center gap-4">
-            <button className="rounded-full bg-red-600 px-7 py-3.5 text-[9px] uppercase tracking-[0.25em] text-white shadow-[0_0_25px_rgba(220,38,38,0.25)] transition hover:-translate-y-1 hover:bg-red-500">
-              Start Exploring <span className="ml-3">→</span>
+
+          {/* BUTTONS */}
+
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+
+            {/* START EXPLORING */}
+
+            <button
+              onClick={() => navigate("/login")}
+              className="group flex h-12 items-center justify-center rounded-full bg-red-600 px-7 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-white shadow-[0_8px_30px_rgba(239,68,68,0.25)] transition duration-300 hover:-translate-y-1 hover:bg-red-500 hover:shadow-[0_12px_40px_rgba(239,68,68,0.4)]"
+            >
+
+              START EXPLORING
+
+              <span className="ml-4 text-base transition-transform duration-300 group-hover:translate-x-1">
+                →
+              </span>
+
             </button>
 
-            <button className="rounded-full border border-white/15 px-6 py-3.5 text-[9px] uppercase tracking-[0.2em] text-white/60 transition hover:-translate-y-1 hover:border-red-500/50 hover:text-white">
-              Talk to AnatoBot <span className="ml-2 text-red-500">✦</span>
+
+            {/* TALK TO ANATOBOT */}
+
+            <button
+              className="flex h-12 items-center justify-center rounded-full border border-white/15 px-6 font-mono text-[9px] uppercase tracking-[0.18em] text-white/60 transition duration-300 hover:border-white/30 hover:text-white"
+            >
+
+              TALK TO ANATOBOT
+
+              <span className="ml-3 text-red-500">
+                ✦
+              </span>
+
             </button>
+
           </div>
-        </div>
 
-        {/* Heart */}
-        <div className="absolute left-[56%] top-[7%] z-20 h-[68%] w-[43%] -translate-x-1/2">
-          <HeartModel scrollProgress={scrollProgress} />
-        </div>
+        </section>
 
-        {/* Right-side Vitals */}
-        <VitalTicker />
 
-        {/* Page dots */}
-        <div className="absolute right-[112px] top-[77%] z-50 hidden flex-col items-center gap-4 xl:flex">
-          <span className="h-2 w-2 animate-pulse rounded-full bg-red-500 shadow-[0_0_12px_3px_rgba(239,68,68,0.5)]" />
-          <span className="h-2 w-2 rounded-full bg-white/20" />
-          <span className="h-2 w-2 rounded-full bg-white/20" />
-        </div>
+        {/* =================================================
+            CENTER 3D HEART
+        ================================================== */}
 
-        {/* Statistics */}
-        <div className="absolute bottom-[52px] left-1/2 z-50 w-[88%] max-w-[880px] -translate-x-1/2">
-          <div className="flex items-center justify-between rounded-full border border-white/10 bg-black/60 px-5 py-3 backdrop-blur-xl sm:px-7">
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full border border-red-500/30 text-red-500">
-                ♥
-              </span>
-              <div>
-                <p className="text-xs font-medium">100,000</p>
-                <p className="text-[6px] uppercase tracking-[0.2em] text-white/30">
-                  Beats per day
-                </p>
-              </div>
-            </div>
+        <section className="relative h-[400px] w-full lg:h-[calc(100vh-72px)]">
 
-            <div className="hidden h-7 w-px bg-white/10 sm:block" />
+          {/* Smaller Heart background glow */}
 
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full border border-red-500/30 text-red-500">
-                ◉
-              </span>
-              <div>
-                <p className="text-xs font-medium">2,000</p>
-                <p className="text-[6px] uppercase tracking-[0.2em] text-white/30">
-                  Gallons of blood
-                </p>
-              </div>
-            </div>
+          <div className="absolute left-1/2 top-1/2 h-[320px] w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-900/30 blur-[100px]" />
 
-            <div className="hidden h-7 w-px bg-white/10 sm:block" />
 
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full border border-red-500/30 text-red-500">
-                ◷
-              </span>
-              <div>
-                <p className="text-xs font-medium">1.2 Sec</p>
-                <p className="text-[6px] uppercase tracking-[0.2em] text-white/30">
-                  Average heartbeat
-                </p>
-              </div>
-            </div>
+          {/* Smaller 3D HEART */}
 
-            <div className="hidden h-7 w-px bg-white/10 sm:block" />
+          <div className="relative z-10 mx-auto h-[75%] w-[75%]">
 
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full border border-red-500/30 text-red-500">
-                ∞
-              </span>
-              <div>
-                <p className="text-xs font-medium">24/7</p>
-                <p className="text-[6px] uppercase tracking-[0.2em] text-white/30">
-                  Never stops
-                </p>
-              </div>
-            </div>
+            <HeartModel />
+
           </div>
+
+        </section>
+
+
+        {/* =================================================
+            LIVE VITALS PANEL
+        ================================================== */}
+
+        <section className="relative z-30 hidden lg:block">
+
+          <div className="rounded-[18px] border border-red-900/50 bg-black/70 p-5 backdrop-blur-xl">
+
+            {/* PANEL HEADER */}
+
+            <div className="mb-6 flex items-center gap-2">
+
+              <span className="h-2 w-2 animate-pulse rounded-full bg-red-500 shadow-[0_0_12px_rgba(239,68,68,0.9)]" />
+
+              <span className="font-mono text-[8px] uppercase tracking-[0.3em] text-red-500">
+                Live Vitals
+              </span>
+
+            </div>
+
+
+            {/* CARDIAC RHYTHM */}
+
+            <div className="border-b border-white/10 pb-5">
+
+              <p className="font-mono text-[7px] uppercase tracking-[0.25em] text-white/30">
+                Cardiac Rhythm
+              </p>
+
+              <div className="mt-3 h-[30px]">
+
+                <svg
+                  viewBox="0 0 200 50"
+                  className="h-full w-full"
+                >
+
+                  <polyline
+                    points="0,35 45,35 55,35 65,10 72,45 80,35 120,35 135,35 145,10 152,45 160,35 200,35"
+                    fill="none"
+                    stroke="#ef4444"
+                    strokeWidth="2"
+                  />
+
+                </svg>
+
+              </div>
+
+            </div>
+
+
+            {/* CELLS ANALYZED */}
+
+            <div className="border-b border-white/10 py-5">
+
+              <p className="font-mono text-[7px] uppercase tracking-[0.25em] text-white/30">
+                Cells Analyzed
+              </p>
+
+              <p className="mt-2 font-mono text-2xl tracking-[0.12em]">
+                12,610
+              </p>
+
+              <p className="mt-1 font-mono text-[7px] uppercase tracking-[0.25em] text-red-500">
+                Live Processing
+              </p>
+
+            </div>
+
+
+            {/* O2 */}
+
+            <div className="border-b border-white/10 py-5">
+
+              <div className="flex items-center justify-between">
+
+                <p className="font-mono text-[7px] uppercase tracking-[0.25em] text-white/30">
+                  O2 Sat
+                </p>
+
+                <p className="font-mono text-base text-red-500">
+                  98%
+                </p>
+
+              </div>
+
+            </div>
+
+
+            {/* HEART RATE */}
+
+            <div className="pt-5">
+
+              <div className="flex items-center justify-between">
+
+                <p className="font-mono text-[7px] uppercase tracking-[0.25em] text-white/30">
+                  Heart Rate
+                </p>
+
+                <p className="font-mono text-base text-red-500">
+                  72 BPM
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+      </main>
+
+
+      {/* =====================================================
+          BOTTOM STATS
+      ====================================================== */}
+
+      <div className="absolute bottom-6 left-1/2 z-30 hidden w-[58%] -translate-x-1/2 rounded-full border border-white/10 bg-black/60 px-7 py-3.5 backdrop-blur-xl lg:block">
+
+        <div className="grid grid-cols-4 divide-x divide-white/10">
+
+          {/* STAT 1 */}
+
+          <div className="flex items-center justify-center gap-3">
+
+            <span className="text-lg text-red-500">
+              ♥
+            </span>
+
+            <div>
+
+              <p className="text-base font-semibold">
+                100,000
+              </p>
+
+              <p className="font-mono text-[6px] uppercase tracking-[0.18em] text-white/30">
+                Beats Per Day
+              </p>
+
+            </div>
+
+          </div>
+
+
+          {/* STAT 2 */}
+
+          <div className="flex items-center justify-center gap-3">
+
+            <span className="text-lg text-red-500">
+              ◉
+            </span>
+
+            <div>
+
+              <p className="text-base font-semibold">
+                2,000
+              </p>
+
+              <p className="font-mono text-[6px] uppercase tracking-[0.18em] text-white/30">
+                Gallons of Blood
+              </p>
+
+            </div>
+
+          </div>
+
+
+          {/* STAT 3 */}
+
+          <div className="flex items-center justify-center gap-3">
+
+            <span className="text-lg text-red-500">
+              ◷
+            </span>
+
+            <div>
+
+              <p className="text-base font-semibold">
+                1.2 Sec
+              </p>
+
+              <p className="font-mono text-[6px] uppercase tracking-[0.18em] text-white/30">
+                Average Heartbeat
+              </p>
+
+            </div>
+
+          </div>
+
+
+          {/* STAT 4 */}
+
+          <div className="flex items-center justify-center gap-3">
+
+            <span className="text-lg text-red-500">
+              ∞
+            </span>
+
+            <div>
+
+              <p className="text-base font-semibold">
+                24/7
+              </p>
+
+              <p className="font-mono text-[6px] uppercase tracking-[0.18em] text-white/30">
+                Never Stops
+              </p>
+
+            </div>
+
+          </div>
+
         </div>
 
-        <p className="absolute bottom-5 left-8 z-50 text-[7px] uppercase tracking-[0.4em] text-white/20">
-          Visual Health Technology
-        </p>
-
-        <div className="absolute bottom-3 left-1/2 z-50 flex -translate-x-1/2 items-center gap-3">
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-red-500" />
-          <p className="text-[7px] uppercase tracking-[0.4em] text-white/30">
-            Scroll to Explore
-          </p>
-          <span className="text-xs text-red-500">↓</span>
-        </div>
-
-        <div className="absolute bottom-5 right-8 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-red-500/50 bg-black/70 backdrop-blur-xl">
-          <svg viewBox="0 0 100 40" width="40" height="24">
-            <path
-              d="M0 20 H20 L28 20 L36 20 L43 5 L50 35 L57 20 H72 L80 20 L87 10 L93 30 L100 20"
-              fill="none"
-              stroke="#ef4444"
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </div>
       </div>
 
-      <style>{`
-        @keyframes vitalEkgDraw {
-          0% { stroke-dashoffset: 280; opacity: 0.15; }
-          15% { opacity: 1; }
-          65% { stroke-dashoffset: 0; opacity: 1; }
-          100% { stroke-dashoffset: -280; opacity: 0.15; }
-        }
 
-        @keyframes backgroundEkg {
-          0% { stroke-dashoffset: 2200; opacity: 0.1; }
-          25% { opacity: 0.75; }
-          60% { stroke-dashoffset: 0; opacity: 0.6; }
-          100% { stroke-dashoffset: -2200; opacity: 0.1; }
-        }
+      {/* =====================================================
+          BOTTOM LABEL
+      ====================================================== */}
 
-        .animate-vital-ekg {
-          stroke-dashoffset: 280;
-          animation: vitalEkgDraw 2s linear infinite;
-        }
+      <div className="absolute bottom-2 left-8 z-30 font-mono text-[6px] uppercase tracking-[0.3em] text-white/20">
 
-        .animate-background-ekg {
-          stroke-dashoffset: 2200;
-          animation: backgroundEkg 5s linear infinite;
-        }
-      `}</style>
-    </section>
+        Visual Health Technology
+
+      </div>
+
+
+      <div className="absolute bottom-2 left-1/2 z-30 -translate-x-1/2 font-mono text-[6px] uppercase tracking-[0.3em] text-white/20">
+
+        <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-red-500" />
+
+        Scroll to Explore
+
+        <span className="ml-2 text-red-500">
+          ↓
+        </span>
+
+      </div>
+
+    </div>
   );
 }
-
-export default Hero;
