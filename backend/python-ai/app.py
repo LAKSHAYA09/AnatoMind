@@ -4,6 +4,7 @@ import os
 
 from services.ocr_service import extract_text
 from services.analysis_service import analyze_report
+from services.explanation_service import generate_explanation
 
 app = FastAPI(
     title="AnatoMind OCR Service",
@@ -52,4 +53,16 @@ async def analyze(data: dict):
     return {
         "success": True,
         "findings": findings
+    }
+    
+@app.post("/explain")
+async def explain(data: dict):
+
+    findings = data.get("findings", [])
+
+    explanations = generate_explanation(findings)
+
+    return {
+        "success": True,
+        "explanations": explanations
     }

@@ -47,10 +47,13 @@ const reportSchema = new mongoose.Schema({
     analysis: [
         {
             parameter: String,
+            value: Number,
             organ: String,
+            condition: String,
             severity: String,
             confidence: Number,
-            condition: String
+            explanation: String,
+            advice: [String]
         }
     ]
 

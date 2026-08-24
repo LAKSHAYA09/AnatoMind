@@ -2,6 +2,7 @@ const Report = require("../models/Report");
 const { extractText } = require("../services/ocrService");
 const parseOCR=require("../utils/parseOCR");
 const { analyzeMedicalData } = require("../services/analysisService");
+const { generateExplanations } = require("../services/explanationService");
 
 // @desc    Upload a new medical report
 // @route   POST /api/reports/upload
@@ -21,10 +22,9 @@ const uploadReport = async (req, res) => {
 
         // Call Python OCR Service
         const ocrResult = await extractText(req.file.path);
-        const parsedData=parseOCR(
-          ocrResult.text
-        );
+        const parsedData=parseOCR(ocrResult.text);
         const analysis = await analyzeMedicalData(parsedData);
+        const explanation = await generateExplanations(analysis.findings);
 
         // Save report
         const report = await Report.create({
@@ -35,13 +35,13 @@ const uploadReport = async (req, res) => {
 
             filePath:`/uploads/${req.file.filename}`,
 
-            reportType:"Unknown",
+            reportType:"Blood Test",
             
             extractedText:ocrResult.text,
             
             extractedData:parsedData,
 
-            analysis:analysis.findings,
+            analysis:explanation.explanations,
             
             status:"Completed"
 
@@ -50,13 +50,11 @@ const uploadReport = async (req, res) => {
         res.status(201).json({
 
             success:true,
-
+            message: "Report analysis completed",
             report,
-
             extractedData:parsedData,
-
-            findings:analysis.findings
-
+            findings:analysis.findings,
+            explanations: explanation.explanations
         });
 
     }
