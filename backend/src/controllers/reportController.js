@@ -3,6 +3,7 @@ const { extractText } = require("../services/ocrService");
 const parseOCR=require("../utils/parseOCR");
 const { analyzeMedicalData } = require("../services/analysisService");
 const { generateExplanations } = require("../services/explanationService");
+const buildOrganSummary = require("../utils/buildOrganSummary");
 
 // @desc    Upload a new medical report
 // @route   POST /api/reports/upload
@@ -25,6 +26,7 @@ const uploadReport = async (req, res) => {
         const parsedData=parseOCR(ocrResult.text);
         const analysis = await analyzeMedicalData(parsedData);
         const explanation = await generateExplanations(analysis.findings);
+        const organSummary = buildOrganSummary(explanation.explanations);
 
         // Save report
         const report = await Report.create({
@@ -42,6 +44,8 @@ const uploadReport = async (req, res) => {
             extractedData:parsedData,
 
             analysis:explanation.explanations,
+
+            organSummary: organSummary,
             
             status:"Completed"
 
@@ -52,9 +56,10 @@ const uploadReport = async (req, res) => {
             success:true,
             message: "Report analysis completed",
             report,
-            extractedData:parsedData,
-            findings:analysis.findings,
-            explanations: explanation.explanations
+            extractedData: parsedData,
+            findings: analysis.findings,
+            explanations: explanation.explanations,
+            organSummary: organSummary
         });
 
     }

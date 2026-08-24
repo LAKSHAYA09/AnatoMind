@@ -33,17 +33,6 @@ const reportSchema = new mongoose.Schema({
         default:{}
     },
 
-    status:{
-        type:String,
-        enum:[
-            "Uploaded",
-            "Processing",
-            "Completed",
-            "Failed"
-        ],
-        default:"Uploaded"
-    },
-
     analysis: [
         {
             parameter: String,
@@ -55,7 +44,23 @@ const reportSchema = new mongoose.Schema({
             explanation: String,
             advice: [String]
         }
-    ]
+    ],
+
+    organSummary: {
+        type: Object,
+        default: {}
+    },
+
+    status:{
+        type:String,
+        enum:[
+            "Uploaded",
+            "Processing",
+            "Completed",
+            "Failed"
+        ],
+        default:"Uploaded"
+    },
 
 },{
     timestamps:true
