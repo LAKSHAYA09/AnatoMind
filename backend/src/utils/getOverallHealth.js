@@ -1,13 +1,15 @@
-const getOverallHealth = (organSummary) => {
-
+const getOverallHealth = (organSummary = {}) => {
+    if (!organSummary || typeof organSummary !== "object") {
+        return "normal";
+    }
     const organs = Object.values(organSummary);
 
     const high = organs.filter(
-        organ => organ.severity === "high"
+        organ => organ?.severity === "high"
     );
 
     const low = organs.filter(
-        organ => organ.severity === "low"
+        organ => organ?.severity === "low"
     );
 
     if (high.length > 0) {

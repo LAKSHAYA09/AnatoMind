@@ -20,7 +20,7 @@ const reportSchema = new mongoose.Schema({
 
     reportType:{
         type:String,
-        default:"Unknown"
+        default:"Blood Test"
     },
 
     extractedText:{
@@ -42,7 +42,7 @@ const reportSchema = new mongoose.Schema({
             severity: String,
             confidence: Number,
             explanation: String,
-            advice: [String]
+            source: String,
         }
     ],
 

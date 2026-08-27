@@ -1,6 +1,6 @@
 const Report = require("../models/Report");
 const getOverallHealth = require("../utils/getOverallHealth");
-const overallStatus = getOverallHealth(report.organSummary);
+const overallStatus = getOverallHealth(Report.organSummary);
 
 const getHealthOverview = async (req, res) => {
 

@@ -4,6 +4,7 @@ const parseOCR=require("../utils/parseOCR");
 const { analyzeMedicalData } = require("../services/analysisService");
 const { generateExplanations } = require("../services/explanationService");
 const buildOrganSummary = require("../utils/buildOrganSummary");
+const { generateAIExplanation } = require("../services/aiExplanationService");
 
 // @desc    Upload a new medical report
 // @route   POST /api/reports/upload
@@ -25,8 +26,12 @@ const uploadReport = async (req, res) => {
         const ocrResult = await extractText(req.file.path);
         const parsedData=parseOCR(ocrResult.text);
         const analysis = await analyzeMedicalData(parsedData);
-        const explanation = await generateExplanations(analysis.findings);
-        const organSummary = buildOrganSummary(explanation.explanations);
+        
+        let aiExplanation = { explanations: [] };
+        if (analysis.findings && analysis.findings.length > 0) {
+            aiExplanation = await generateAIExplanation(analysis.findings);
+        }
+        const organSummary = buildOrganSummary(aiExplanation.explanations);
 
         // Save report
         const report = await Report.create({
@@ -43,7 +48,7 @@ const uploadReport = async (req, res) => {
             
             extractedData:parsedData,
 
-            analysis:explanation.explanations,
+            analysis:aiExplanation.explanations,
 
             organSummary: organSummary,
             
@@ -55,24 +60,24 @@ const uploadReport = async (req, res) => {
 
             success:true,
             message: "Report analysis completed",
-            report,
+            reportId: report._id,
             extractedData: parsedData,
             findings: analysis.findings,
-            explanations: explanation.explanations,
-            organSummary: organSummary
+            explanations: aiExplanation.explanations,
+            organSummary: organSummary,
+            aiMetadata: {
+              generated: aiExplanation.explanations.length > 0,
+              provider: "AnatoMind AI",
+              type: "explanation-only"
+            }
         });
-
     }
 
     catch(error){
 
         console.error(error);
 
-        res.status(500).json({
-
-            success:false,
-
-            message:"OCR Processing Failed"
+        res.status(500).json({success:false,message:"OCR Processing Failed"
 
         });
 
