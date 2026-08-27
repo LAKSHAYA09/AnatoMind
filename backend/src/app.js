@@ -17,7 +17,9 @@ app.use("/api/health",healthRoutes);
 app.get("/", (req, res) => {
     res.json({
         success: true,
-        message: "Welcome to AnatoMind Backend"
+        service: "AnatoMind Backend",
+        status: "running",
+        version: "1.0.0"
     });
 });
 

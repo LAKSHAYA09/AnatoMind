@@ -4,34 +4,36 @@ const ORGAN_LIST = [
     "kidney",
     "liver",
     "pancreas",
-    "blood",
     "brain",
-    "bones"
+    "bones",
+    "blood"
 ];
 
 const buildOrganSummary = (findings = []) => {
 
     const organs = {};
 
-    // Initialize all supported organs
+    // Create default state for every supported organ
     ORGAN_LIST.forEach((organ) => {
 
         organs[organ] = {
             status: "normal",
             severity: "normal",
+            findingsCount: 0,
             findings: []
         };
 
     });
 
-    // Add abnormal findings
     findings.forEach((finding) => {
 
         const organ = finding.organ?.toLowerCase();
 
-        if (!organs[organ]) {
+        if (!organ || !organs[organ]) {
             return;
         }
+
+        organs[organ].findingsCount += 1;
 
         organs[organ].findings.push({
 
@@ -50,6 +52,7 @@ const buildOrganSummary = (findings = []) => {
         if (finding.severity === "High") {
 
             organs[organ].status = "attention";
+
             organs[organ].severity = "high";
 
         }
@@ -59,6 +62,7 @@ const buildOrganSummary = (findings = []) => {
         ) {
 
             organs[organ].status = "attention";
+
             organs[organ].severity = "low";
 
         }

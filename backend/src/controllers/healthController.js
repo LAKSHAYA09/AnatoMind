@@ -1,12 +1,18 @@
 const Report = require("../models/Report");
-const getOverallHealth = require("../utils/getOverallHealth");
-const overallStatus = getOverallHealth(Report.organSummary);
+
+const getOverallHealth =
+    require("../utils/getOverallHealth");
+
+const ORGAN_METADATA =
+    require("../utils/organMetadata");
+
 
 const getHealthOverview = async (req, res) => {
 
     try {
 
-        const report = await Report.findById(req.params.id);
+        const report =
+            await Report.findById(req.params.id);
 
         if (!report) {
 
@@ -36,6 +42,41 @@ const getHealthOverview = async (req, res) => {
 
         }
 
+        const overallStatus =
+            getOverallHealth(
+                report.organSummary
+            );
+
+        const organs = {};
+
+        Object.entries(
+            report.organSummary || {}
+        ).forEach(([organ, data]) => {
+
+            organs[organ] = {
+
+                name:
+                    ORGAN_METADATA[organ]?.name ||
+                    organ,
+
+                system:
+                    ORGAN_METADATA[organ]?.system ||
+                    "Unknown System",
+
+                status: data.status,
+
+                severity: data.severity,
+
+                findingsCount:
+                    data.findingsCount || 0,
+
+                findings:
+                    data.findings || []
+
+            };
+
+        });
+
         res.status(200).json({
 
             success: true,
@@ -44,13 +85,14 @@ const getHealthOverview = async (req, res) => {
 
             reportType: report.reportType,
 
-            status: report.status,
+            reportStatus: report.status,
 
             overallStatus: overallStatus,
 
-            organSummary: report.organSummary,
+            organs: organs,
 
-            findings: report.analysis
+            analysis:
+                report.analysis || []
 
         });
 
@@ -71,7 +113,9 @@ const getHealthOverview = async (req, res) => {
         });
 
     }
+
 };
+
 
 module.exports = {
     getHealthOverview
